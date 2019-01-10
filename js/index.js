@@ -2,13 +2,7 @@ require(['./config'],function(){
 	require(['mui','picker','echarts','$dom','dtpicker'],function(mui,picker,echarts,$dom,dtpicker){
 		// mui.init();
 		function init(){
-			//第一个demo，拖拽后显示操作图标，点击操作图标删除元素；
-			document.querySelector('.mui-inner-wrap').addEventListener('drag', function(event) {
-				event.stopPropagation();
-			});
-			
-			//左滑删除
-			list();
+	
 			
 			//初始化时间
 			// loadData();

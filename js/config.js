@@ -10,7 +10,7 @@ require.config({
         "picker": { //picker在mui执行完成之后再执行
             deps: ['mui'],
         },
-		 "dtpicker": { //picker在mui执行完成之后再执行
+		 "dtpicker": { //dtpicker在mui执行完成之后再执行
 		    deps: ['mui'],
 		},
     }
