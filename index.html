@@ -4,70 +4,125 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
     <title></title>
-    <script src="js/mui.min.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
 	<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css"/>
-   
+	<link rel="stylesheet" type="text/css" href="css/sass/style.css"/>
+	
 </head>
 <body>
-	<div class="mui-content">
-		<div class="mui-card-header">
-			头部 
-			<button id='demo6' data-options='{"type":"month"}' class="btn mui-btn mui-btn-block">选择月份 ...</button>
-		</div>
-		<div class="mui-bar-body">
-			中部 
-		</div>
-		<div class="mui-bar-footer">
-			尾部 
-		</div>
-	</div>
-	<script src="js/mui.picker.min.js" type="text/javascript" charset="utf-8"></script>
-	 <script type="text/javascript" charset="utf-8">
-	  	mui.init();
-		(function($) {
-				$.init();
-				var result = $('#result')[0];
-				var btns = $('.btn');
-				btns.each(function(i, btn) {
-					btn.addEventListener('tap', function() {
-						var optionsJson = this.getAttribute('data-options') || '{}';
-						var options = JSON.parse(optionsJson);
-						var id = this.getAttribute('id');
-						/*
-						 * 首次显示时实例化组件
-						 * 示例为了简洁，将 options 放在了按钮的 dom 上
-						 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
-						 */
-						var picker = new $.DtPicker(options);
-						picker.show(function(rs) {
-							/*
-							 * rs.value 拼合后的 value
-							 * rs.text 拼合后的 text
-							 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
-							 * rs.m 月，用法同年
-							 * rs.d 日，用法同年
-							 * rs.h 时，用法同年
-							 * rs.i 分（minutes 的第二个字母），用法同年
-							 */
-							result.innerText = '选择结果: ' + rs.text;
-							/* 
-							 * 返回 false 可以阻止选择框的关闭
-							 * return false;
-							 */
-							/*
-							 * 释放组件资源，释放后将将不能再操作组件
-							 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
-							 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
-							 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
-							 */
-							picker.dispose();
-						});
-					}, false);
-				});
-			})(mui);
-	</script>
 	
+	<!-- 主界面移动、菜单不动 -->
+	<div class="mui-off-canvas-wrap mui-draggable">
+	  <!-- 菜单容器 -->
+	  <aside class="mui-off-canvas-left aside-bg" id="offCanvasSide">
+		<div class="mui-scroll-wrapper">
+		  <div class="mui-scroll">
+			<!-- 菜单具体展示内容 -->
+			<div class="aside-nav">
+				<ul>
+					<p>收支类型</p>
+					<li>全部支出</li>
+					<li>全部支出</li>
+					<li>全部支出</li>
+					<li>全部支出</li>
+				</ul>
+				
+				<ul class="aside-two">
+					<p>收支分类</p>
+					<li>购物</li>
+					<li>购物</li>
+					<li>购物</li>
+					<li>购物</li>
+				</ul>
+			</div>
+				
+		  </div>
+		</div>
+	  </aside>
+	  <!-- 主页面容器 -->
+	  <div class="mui-inner-wrap">
+		<!-- 主页面标题 -->
+		<header class="mui-bar mui-bar-nav header-nav">
+		 <!-- <a class="mui-icon mui-action-menu mui-icon-bars mui-pull-left"  href="#offCanvasSide" ></a>
+		 <!-- <h1 class="mui-title">标题</h1> --> 
+		 <div class="header-list">
+			<div>
+				<span>本月花费（元）</span>
+				<ul class="select-timer">
+					<li class="select-status">月</li>
+					<li class="select-date">xxxx-xx</li>
+				</ul>
+			</div>
+			<div class="money">
+				8888<span>.00</span>
+			</div>
+			<div><span class="">本月收入</span><span>8888<span>.00</span></span></div>
+		 </div>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active">
+				<span class="mui-icon mui-icon-home"></span>
+				<span class="mui-tab-label">首页</span>
+			</a>
+			<a class="mui-tab-item">
+				<span class="mui-icon mui-icon-phone"></span>
+				<span class="mui-tab-label">电话</span>
+			</a>
+			<a class="mui-tab-item">
+				<span class="mui-icon mui-icon-email"></span>
+				<span class="mui-tab-label">邮件</span>
+			</a>
+			<a class="mui-tab-item">
+				<span class="mui-icon mui-icon-gear"></span>
+				<span class="mui-tab-label">设置</span>
+			</a>
+		</nav>
+		<div class="mui-content mui-scroll-wrapper scetion-scroll">
+			<div class="mui-badge-nav">
+				<!-- 展示左侧的菜单栏 -->
+				<span class="mui-icon mui-icon-list"></span>
+				<ul class="nav-tab">
+					<li class="active">账单</li>
+					<li>图表</li>
+				</ul>
+				<span class="mui-icon mui-icon-search"></span>
+			</div>
+		  <div class="mui-scroll">
+			<!-- 主界面具体展示内容 -->
+			
+			<div class="tab1">
+				<ul id="OA_task_1" class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<div class="mui-slider-right mui-disabled">
+							<a class="mui-btn mui-btn-red">删除</a>
+						</div>
+						<div class="mui-slider-handle">
+							数据一
+						</div>
+					</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-slider-right mui-disabled">
+							<a class="mui-btn mui-btn-red">删除</a>
+						</div>
+						<div class="mui-slider-handle">
+							数据一
+						</div>
+					</li>
+					
+				</ul>
+			</div>
+			<div class="tab2 none">图表</div>
+			
+			
+			
+		  </div>
+		</div> 
+		<div class="mui-off-canvas-backdrop"></div>
+	  </div> 
+	</div>
+	
+	
+	
+	<script type="text/javascript" src="js/libs/require.js" data-main = "./js/index.js"></script>
 </body>
 </html>

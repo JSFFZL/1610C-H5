@@ -1,0 +1,19 @@
+{
+  "name": "1610c-h5",
+  "version": "1.0.0",
+  "description": "1610C-H5",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSFFZL/1610C-H5.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JSFFZL/1610C-H5/issues"
+  },
+  "homepage": "https://github.com/JSFFZL/1610C-H5#readme"
+}
