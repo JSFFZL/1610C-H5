@@ -7,11 +7,12 @@ gulp.task('server',function(){
 		port:9093,
 		open:true,
 		livereload:true,
-// 		proxies:[
-// 			{
-// 				source:'',target:''
-// 			},
-// 		]
+		proxies:[
+			{
+				source:'/bill/api/addBill',target:'http://localhost:3000/bill/api/addBill',
+				source:'/classIfy/api/classIfy',target:"http://localhost:3000/classIfy/api/classIfy"
+			}
+		]
 	}))
 })
 

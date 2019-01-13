@@ -74,8 +74,13 @@ html, body {
   padding: 6px; }
 
 .mui-badge-nav {
+  position: relative;
+  z-index: 3;
+  padding: 8px 5px 3px 0;
   display: flex;
-  justify-content: space-between; }
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #c8c7cc; }
 
 .nav-tab {
   display: flex; }
@@ -89,7 +94,44 @@ html, body {
       background: #ffe544; }
 
 .scetion-scroll {
-  padding-top: 125px !important; }
+  padding-top: 120px !important; }
+
+.scroll-bottom {
+  margin-bottom: 100px; }
 
 .none {
   display: none; }
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .bill-item dl {
+    display: flex;
+    align-items: center; }
+    .bill-item dl dt {
+      background: yellow;
+      border-radius: 50%;
+      font-size: 12px;
+      padding: 4px;
+      margin-right: 10px; }
+
+.go-add {
+  background: yellow;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9;
+  padding: 14px;
+  display: block;
+  text-align: center;
+  border-radius: 50%; }
+  .go-add.mui-icon {
+    font-size: 40px; }
+
+.red {
+  color: red; }
+
+.green {
+  color: green; }
