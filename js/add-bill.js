@@ -11,11 +11,10 @@ require(['../js/config'], function() {
 			//添加点击事件
 			addEvent();
 
+			typeClass();
+			
 			//选中-当前收支类型
 			addClick();
-
-			//收支类型高亮切换
-			typeClass()
 		}
 
 		var dtpicker = null,
@@ -66,12 +65,13 @@ require(['../js/config'], function() {
 
 		//选中-当前收支类型
 		function addClick() {
-			var dl = document.querySelectorAll('.mui-slider-item dl');
 			mui('.mui-slider-item').on('tap', 'dl', function() {
+				//元素 dl
+				var dl = document.querySelectorAll('.mui-slider-item dl');
 				for (var i = 0; i < dl.length; i++) {
 					dl[i].classList.remove('active');
 				}
-				this.classList.add('active');
+				this.classList.add('active'); //
 			})
 		}
 
@@ -101,62 +101,75 @@ require(['../js/config'], function() {
 				dataType: 'json', //服务器返回json格式数据
 				type: 'post', //HTTP请求类型
 				success: function(res) {
-					mui.alert(res.msg);
+					if (res.code == 3) {
+						mui.alert(res.msg);
+					} else {
+						mui.alert("添加成功！", function() {
+							location.href = '/'
+						});
+
+					}
 				}
 			});
 		}
 		//收支类型的高亮显示
 		function typeClass() {
-			var tabList = document.querySelectorAll('.tab-list > .tab-item');
-
-			mui('.tab-list').on('tap', '.tab-item', function() {
-				
-				if(http == 1){
-					for (var i = 0; i < tabList.length; i++) {
-						tabList[i].classList.remove('active');
+			var typeClass = document.querySelectorAll('.tab-list .tab-item');
+			mui('.tab-list').on('tap', 'span', function() {
+				if (http == 1) {
+					for (var i = 0; i < typeClass.length; i++) {
+						typeClass[i].classList.remove('active');
 					}
 					this.classList.add('active');
-					
-					var cType = this.innerHTML; //当前点击内容
-					cTypeFun(cType); //获取类型
+					var typeName = this.innerHTML;
+					console.log(typeName);
+					//获取类别的接口
+					ajaxClass(typeName)
 				}else{
-					mui.alert('客观您的手速太快了！')
+					mui.alert('客观您的手速太快了，小二跟不上了...')
 				}
-				
-				
+
 			})
+
 		}
 
 		//获取类别的接口
-		function cTypeFun(cType) {
+		function ajaxClass(typeName) {
 			http = 0;
-			mui.ajax('/classIfy/api/classIfy', {
+			mui.ajax('/clssIfy/api/classIfy', {
 				data: {
 					uid: '5c343a24c5c14c4390fed318',
-					c_type: cType
+					c_type: typeName
 				},
 				dataType: 'json', //服务器返回json格式数据
 				type: 'post', //HTTP请求类型
-				timeout: 5000, //超时时间设置为10秒；
+				timeout:3000,//超时时间设置为10秒；
 				success: function(data) {
+					console.log(data)
 					var str = '';
+					var zdy = `<dl>
+								<dt>
+									<span class=""></span>
+								</dt>
+								<dd>自定义</dd>
+							</dl>`;
 					data.msg.forEach(function(arr) {
 						str +=
-							`
-						<dl>
-							<dt>
-								<span class="${arr.c_icon}"></span>
-							</dt>
-							<dd>${arr.c_name}</dd>
-						</dl>`
+							`<dl>
+								<dt>
+									<span class="${arr.c_icon}"></span>
+								</dt>
+								<dd>${arr.c_name}</dd>
+							</dl>`
 					})
-					document.querySelector('.type-icon').innerHTML = str;
+					$dom('.type-icon').innerHTML = str + zdy;
 					http = 1;
 				},
 				error: function(xhr, type, errorThrown) {
-					console.log(xhr);
-					console.log(type);
-					console.log(errorThrown);
+					mui.alert('客观您稍后再试，服务器太累了！');
+// 					console.log(xhr)
+// 					console.log(type)
+// 					console.log(errorThrown)
 				}
 			});
 		}

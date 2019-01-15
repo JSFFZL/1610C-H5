@@ -6,6 +6,7 @@ require(['./config'], function() {
 			document.querySelector('.mui-inner-wrap').addEventListener('drag', function(event) {
 				event.stopPropagation();
 			});
+			
 
 			//初始化scroll控件
 			mui('.mui-scroll-wrapper').scroll({
@@ -37,15 +38,41 @@ require(['./config'], function() {
 			//选择时间
 			timerSelect();
 
+			//缓存当前用户
+			localUser();
+			
+			// billAjax();
+
 		}
 		var picker = null,
 			dtPicker = null,
 			curYear = new Date().getFullYear(), //年
 			curMonth = new Date().getMonth() + 1; //月份
-		_selectStatus = $dom('.select-status'), //月/年
+			_selectStatus = $dom('.select-status'), //月/年
 			_selectDate = $dom('.select-date'), //时间年/月
-			status = 'month'; //初始的值
+			status = 'month',//初始的值
+			localStorageUid = localStorage.getItem('uid'); //
 
+		//缓存用户
+		function localUser() {
+			mui.ajax('/users/api/getUser',{
+				data:{
+					nick_name:'lili'
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				success:function(data){
+					var uid = data.msg[0]._id;
+					console.log(uid)
+					//存到localStorage
+					localStorage.setItem('uid',uid);
+					billAjax();
+				},
+				error:function(xhr,type,errorThrown){
+					
+				}
+			});
+		}
 
 		//初始化时间
 		function loadTime() {
@@ -105,7 +132,8 @@ require(['./config'], function() {
 						_yearH5.style.width = '100%';
 
 						_yPicker.style.width = '100%';
-
+						
+						
 					}
 				})
 			})
@@ -133,21 +161,6 @@ require(['./config'], function() {
 			})
 		}
 		//区域滚动
-		function scroll() {
-			mui('.mui-scroll').scroll({
-				// options = {
-				scrollY: true, //是否竖向滚动
-				scrollX: false, //是否横向滚动
-				startX: 0, //初始化时滚动至x
-				startY: 0, //初始化时滚动至y
-				indicators: true, //是否显示滚动条
-				deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
-				bounce: true //是否启用回弹
-				// }
-				//deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-			});
-		}
-
 		//tab切换
 		function tab() {
 			mui(".nav-tab").on('tap', 'li', function() {
@@ -183,6 +196,53 @@ require(['./config'], function() {
 				});
 			});
 		}
+		
+		
+		
+		
+		//按时间查询
+		function billAjax(){
+			var timeText = $dom('.select-date').innerHTML;
+			
+			mui.ajax('/bill/api/getBillTimer',{
+				data:{
+					uid:localStorageUid,
+					timer:timeText
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；
+				success:function(data){
+					
+					
+					
+					var str = '';
+					data.msg.forEach(function(arr){
+						str+=`<li class="mui-table-view-cell">
+									<div class="mui-slider-right mui-disabled">
+										<a class="mui-btn mui-btn-red">删除</a>
+									</div>
+									<div class="mui-slider-handle bill-item">
+										<dl>
+											<dt>
+												<span class="${arr.icon}"></span>
+											</dt>
+											<dd><p>住宿</p><p>${arr.timer}</p></dd>
+										</dl>
+										<span class="${arr.type == '支出' ? 'red' : 'green'}">${arr.money}</span>
+									</div>
+								</li>`
+					})
+					$dom('.mui-table-view').innerHTML = str;
+				},
+				error:function(xhr,type,errorThrown){
+					
+				}
+			});
+		}
+		
+		
+		
 		//执行开始方法
 		init();
 

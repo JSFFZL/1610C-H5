@@ -4,13 +4,21 @@ var sass = require('gulp-sass');
 gulp.task('server',function(){
 	return gulp.src('./')
 	.pipe(server({
-		port:9093,
+		port:9095,
 		open:true,
 		livereload:true,
 		proxies:[
 			{
 				source:'/bill/api/addBill',target:'http://localhost:3000/bill/api/addBill',
-				source:'/classIfy/api/classIfy',target:"http://localhost:3000/classIfy/api/classIfy"
+			},
+			{
+				source:'/clssIfy/api/classIfy',target:"http://localhost:3000/classIfy/api/classIfy"
+			},
+			{
+				source:'/users/api/getUser',target:'http://localhost:3000/users/api/getUser'
+			},
+			{
+				source:'/bill/api/getBillTimer',target:'http://localhost:3000/bill/api/getBillTimer'
 			}
 		]
 	}))
