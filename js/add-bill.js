@@ -22,6 +22,7 @@ require(['../js/config'], function() {
 			curMonth = new Date().getMonth() + 1,
 			curDay = new Date().getDate(),
 			_chooseTime = $dom('.choose-time'),
+			uid = localStorage.getItem('uid'),
 			http = 1; //防止频繁发送htt请求接口
 
 
@@ -91,7 +92,7 @@ require(['../js/config'], function() {
 			console.log(type + money + timer + intro + icon)
 			mui.ajax('/bill/api/addBill', {
 				data: {
-					uid: '5c343a24c5c14c4390fed318',
+					uid: uid,
 					type: type,
 					money: money,
 					timer: timer,
@@ -138,7 +139,7 @@ require(['../js/config'], function() {
 			http = 0;
 			mui.ajax('/clssIfy/api/classIfy', {
 				data: {
-					uid: '5c343a24c5c14c4390fed318',
+					uid: uid,
 					c_type: typeName
 				},
 				dataType: 'json', //服务器返回json格式数据

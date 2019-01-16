@@ -19,6 +19,9 @@ gulp.task('server',function(){
 			},
 			{
 				source:'/bill/api/getBillTimer',target:'http://localhost:3000/bill/api/getBillTimer'
+			},
+			{
+				source:'/bill/api/getTimeBill',target:'http://localhost:3000/bill/api/getTimeBill'
 			}
 		]
 	}))

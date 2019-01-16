@@ -6,7 +6,7 @@ require(['./config'], function() {
 			document.querySelector('.mui-inner-wrap').addEventListener('drag', function(event) {
 				event.stopPropagation();
 			});
-			
+
 
 			//初始化scroll控件
 			mui('.mui-scroll-wrapper').scroll({
@@ -40,7 +40,7 @@ require(['./config'], function() {
 
 			//缓存当前用户
 			localUser();
-			
+
 			// billAjax();
 
 		}
@@ -48,28 +48,30 @@ require(['./config'], function() {
 			dtPicker = null,
 			curYear = new Date().getFullYear(), //年
 			curMonth = new Date().getMonth() + 1; //月份
-			_selectStatus = $dom('.select-status'), //月/年
+		_selectStatus = $dom('.select-status'), //月/年
 			_selectDate = $dom('.select-date'), //时间年/月
-			status = 'month',//初始的值
-			localStorageUid = localStorage.getItem('uid'); //
+			status = 'month', //初始的值
+			localStorageUid = localStorage.getItem('uid'),
+			numMoney = 0, //收入总金额	
+			sumMoney = 0; //花费总金额	
 
 		//缓存用户
 		function localUser() {
-			mui.ajax('/users/api/getUser',{
-				data:{
-					nick_name:'lili'
+			mui.ajax('/users/api/getUser', {
+				data: {
+					nick_name: 'lili'
 				},
-				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
-				success:function(data){
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				success: function(data) {
 					var uid = data.msg[0]._id;
-					console.log(uid)
 					//存到localStorage
-					localStorage.setItem('uid',uid);
-					billAjax();
+					localStorage.setItem('uid', uid);
+					//按时间获取账单
+					billAjax(_selectDate.innerHTML);
 				},
-				error:function(xhr,type,errorThrown){
-					
+				error: function(xhr, type, errorThrown) {
+
 				}
 			});
 		}
@@ -110,7 +112,6 @@ require(['./config'], function() {
 						_yPicker = document.querySelector("[data-id=picker-y]");
 
 					//年月视图
-					// var 
 
 					if (status === 'month') { //月
 						_selectDate.innerHTML = curYear + '-' + curMonth; //当前年-月
@@ -122,6 +123,8 @@ require(['./config'], function() {
 						_yearH5.style.width = '50%';
 
 						_yPicker.style.width = '50%';
+						//按时间获取账单
+						billAjax(_selectDate.innerHTML)
 					} else { //年
 						_selectDate.innerHTML = curYear;
 
@@ -132,7 +135,8 @@ require(['./config'], function() {
 						_yearH5.style.width = '100%';
 
 						_yPicker.style.width = '100%';
-						
+						//按时间获取账单
+						billAjax(_selectDate.innerHTML)
 						
 					}
 				})
@@ -146,8 +150,12 @@ require(['./config'], function() {
 
 					if (status === 'month') {
 						_selectDate.innerHTML = selectItems.y.value + '-' + selectItems.m.value;
+						//按时间获取账单
+						billAjax(_selectDate.innerHTML)
 					} else {
 						_selectDate.innerHTML = selectItems.y.value;
+						//按时间获取账单
+						billAjax(_selectDate.innerHTML)
 					}
 
 				})
@@ -196,29 +204,36 @@ require(['./config'], function() {
 				});
 			});
 		}
-		
-		
-		
-		
+
 		//按时间查询
-		function billAjax(){
-			var timeText = $dom('.select-date').innerHTML;
-			
-			mui.ajax('/bill/api/getBillTimer',{
-				data:{
-					uid:localStorageUid,
-					timer:timeText
+		function billAjax(timeText) {
+			numMoney = 0;
+			sumMoney = 0;
+			mui.ajax('/bill/api/getTimeBill', {
+				data: {
+					uid: localStorageUid,
+					timer: timeText
 				},
-				dataType:'json',//服务器返回json格式数据
-				type:'post',//HTTP请求类型
-				timeout:10000,//超时时间设置为10秒；
-				success:function(data){
-					
-					
-					
-					var str = '';
-					data.msg.forEach(function(arr){
-						str+=`<li class="mui-table-view-cell">
+				dataType: 'json', //服务器返回json格式数据
+				type: 'post', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				success: function(data) {
+					//数组倒序排列
+					// var sortData = data.msg.reverse();
+					var sortData = data.data.reverse();
+					console.log(sortData);
+					if (sortData.length > 0) {
+						$dom('.no-data').style.display = 'none';
+						$dom('.mui-table-view').style.display = 'block';
+						var str = '';
+						sortData.forEach(function(arr) {
+							if (arr.type == '收入') {
+								numMoney += arr.money * 1;
+							} else {
+								sumMoney += arr.money * 1;
+							}
+							str +=
+								`<li class="mui-table-view-cell">
 									<div class="mui-slider-right mui-disabled">
 										<a class="mui-btn mui-btn-red">删除</a>
 									</div>
@@ -227,22 +242,29 @@ require(['./config'], function() {
 											<dt>
 												<span class="${arr.icon}"></span>
 											</dt>
-											<dd><p>住宿</p><p>${arr.timer}</p></dd>
+											<dd class="color-black"><p>${arr.intro}</p><p>${arr.timer}</p></dd>
 										</dl>
 										<span class="${arr.type == '支出' ? 'red' : 'green'}">${arr.money}</span>
 									</div>
 								</li>`
-					})
-					$dom('.mui-table-view').innerHTML = str;
+						})
+					}else{
+						console.log($dom('.no-data'));
+						$dom('.no-data').style.display = 'block';
+						$dom('.mui-table-view').style.display = 'none';
+					}
+					$dom('.mui-table-view').innerHTML = str; //列表
+					$dom('.money').innerHTML = sumMoney; //花费
+					$dom('.num-money').innerHTML = numMoney; //收入
 				},
-				error:function(xhr,type,errorThrown){
-					
+				error: function(xhr, type, errorThrown) {
+
 				}
 			});
 		}
-		
-		
-		
+
+
+
 		//执行开始方法
 		init();
 
